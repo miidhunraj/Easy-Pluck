@@ -10,7 +10,7 @@ A lightweight Flask web application designed for rapid file sharing over a local
 - **Storage Management:** One-click wipe to clear all shared files.
 
 ## Setup
-1. Clone the repo: `git clone <your-repo-url>`
+1. Clone the repo: `git clone https://github.com/miidhunraj/Easy-Pluck.git`
 2. Install dependencies: `pip install -r requirements.txt`
 3. Run the app: `python app.py`
 4. Access at: `http://localhost:7777`
