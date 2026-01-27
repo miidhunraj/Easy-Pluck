@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Easy Pluck</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+body {
+    background: radial-gradient(circle, #0f172a, #020617);
+    color: white;
+    font-family: Inter, sans-serif;
+}
+.glass {
+    background: rgba(30,41,59,.4);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,.08);
+}
+</style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
+
+
+<div class="max-w-5xl w-full space-y-10">
+
+<header class="glass p-10 rounded-[2.5rem] text-center">
+    <h1 class="text-5xl font-black tracking-tight">
+        Easy <span class="text-cyan-400">Pluck</span>
+    </h1>
+    <p class="mt-2 text-xs uppercase opacity-50 tracking-widest">
+        Private LAN Universal Copy Key
+    </p>
+
+    <button onclick="toggleQR()"
+        class="mt-6 px-6 py-3 bg-cyan-500 text-black rounded-2xl font-bold">
+             QR  Connect
+    </button>
+</header>
+
+<form action="/upload" method="POST" enctype="multipart/form-data"
+      class="glass p-10 rounded-[2.5rem] text-center border-2 border-dashed border-white/10">
+
+    <input type="file" name="file" onchange="this.form.submit()" class="hidden" id="fileIn">
+    
+    <label for="fileIn" class="cursor-pointer block">
+        <i data-lucide="upload-cloud" class="w-16 h-16 mx-auto text-cyan-400"></i>
+        <h2 class="text-2xl font-bold mt-4">Pluck It</h2>
+        <p class="text-sm opacity-50 mt-1">Tap or drop file here</p>
+    </label>
+</form>
+
+<div class="glass p-8 rounded-[2.5rem] space-y-4">
+    <div class="flex justify-between items-center">
+        <h3 class="text-sm uppercase tracking-widest opacity-50">Storage</h3>
+        <button onclick="wipeStorage()" class="text-red-400 text-xs font-bold">WIipe Data</button>
+    </div>
+
+    {% if files %}
+        {% for file in files %}
+        <div class="flex justify-between items-center bg-white/5 p-4 rounded-xl">
+            <span class="truncate">{{ file }}</span>
+            <div class="flex gap-2">
+                <a href="/view/{{file}}" target="_blank"
+                   class="px-3 py-1 bg-white/10 rounded text-xs">VIEW</a>
+
+                <a href="/download/{{file}}"
+                   class="px-3 py-1 bg-cyan-500 text-black rounded text-xs font-bold">
+                   DOWNLOAD
+                </a>
+
+                <a href="/download/{{file}}?burn=true"
+                   class="px-3 py-1 bg-orange-500 text-black rounded text-xs font-bold">
+                   ONE-TIME
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="opacity-30 text-center py-10">No files uploaded</p>
+    {% endif %}
+</div>
+</div>
+
+<!-- QR MODAL -->
+<div id="qrModal" onclick="toggleQR()"
+     class="hidden fixed inset-0 bg-black/80 flex items-center justify-center">
+    <div class="bg-white p-8 rounded-2xl" onclick="event.stopPropagation()">
+        <div id="qrcode"></div>
+    </div>
+</div>
+
+<script>
+lucide.createIcons();
+
+const modal = document.getElementById("qrModal");
+const qr = new QRCode(document.getElementById("qrcode"), {
+    width: 200,
+    height: 200
+});
+
+function toggleQR(){
+    modal.classList.toggle("hidden");
+    qr.clear();
+    qr.makeCode(window.location.href);
+}
+
+function wipeStorage(){
+    if(!confirm("Delete all files?")) return;
+    fetch("/wipe",{method:"POST"})
+    .then(()=>location.reload());
+}
+</script>
+</body>
+</html>
