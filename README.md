@@ -19,7 +19,7 @@ A lightweight Flask web application designed for rapid file sharing over a local
    pip install -r requirements.txt
 3. Run the app:
    ```bash
-   python app.py
+   python Pluck.py
 4. Access at:
    ```bash
    http://localhost:7777
